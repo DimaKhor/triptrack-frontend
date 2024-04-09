@@ -24,7 +24,7 @@ const Form = observer(() => {
                 <nav>
                     <ul className="main__links-list">
                         <li>
-                            <a href="#">
+                            <a href="../login">
                                 <button className="main__link blue_button">Войти</button>
                             </a>
                         </li>
