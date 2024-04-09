@@ -75,7 +75,6 @@ const Form = observer(() => {
                 </ul>
             </section>
         </body>
-
     );
 });
 export default Form;
