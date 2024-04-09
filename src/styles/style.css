@@ -29,7 +29,7 @@
 .blue_button {
   background-color: #129ced;
   border: none;
-  padding: 9px;
+  padding: 9px 20px;
   color: #fff;
   border-radius: 12px;
 }
@@ -37,7 +37,7 @@
 .grey_button {
   background-color: #f0f2f5;
   border: none;
-  padding: 9px;
+  padding: 9px 20px;
   border-radius: 12px;
 }
 
