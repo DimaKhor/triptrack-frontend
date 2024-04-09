@@ -1,6 +1,6 @@
 import React, {StrictMode} from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/css/style.css';
+import './styles/global.css';
 import {NotFoundPage} from "./pages/NotFoundPage";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import {ProtectedRoute} from "./ProtectedRoute";

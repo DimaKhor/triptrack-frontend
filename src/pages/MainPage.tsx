@@ -1,4 +1,4 @@
-import '../styles/css/global.css';
+import '../styles/global.css';
 import React from "react";
 import {Main} from "../modules/main/Main";
 
