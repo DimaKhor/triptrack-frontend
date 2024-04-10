@@ -15,11 +15,11 @@ export default function validate(email: string, password: string) {
     } else if (password.length < 8) {
         errors.password = "Password must be 8 or more characters";
     } else if (!/\d/.test(password)) {
-        errors.password = "Password must contain atleast 1 number";
+        errors.password = "Password must contain at least 1 number";
     } else if (!/[!@#$%&?]/g.test(password)) {
-        errors.password = "Password must contain atleast 1 special character";
+        errors.password = "Password must contain at least 1 special character";
     } else if (!/[A-Z]/g.test(password)) {
-        errors.password = "Password must contain atleast 1 capitol letter";
+        errors.password = "Password must contain at least 1 capitol letter";
     }
     return errors;
 }
