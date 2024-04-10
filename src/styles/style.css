@@ -4,6 +4,12 @@
   padding: 9px 20px;
   color: #fff;
   border-radius: 12px;
+  cursor: pointer;
+}
+
+.blue_button:hover {
+  background-color: #0c72ad;
+
 }
 
 .grey_button {
@@ -11,6 +17,11 @@
   border: none;
   padding: 9px 20px;
   border-radius: 12px;
+  cursor: pointer;
+}
+
+.grey_button:hover {
+  background-color: #acadb0;
 }
 
 .wrong_data {
@@ -147,6 +158,8 @@
 .login__input-list {
   list-style: none;
   display: flex;
+  flex-wrap: wrap;
+  align-content: center;
   flex-direction: column;
   gap: 20px;
   margin-bottom: 20px;
@@ -187,4 +200,5 @@
   text-decoration: underline;
   text-decoration-skip-ink: none;
   color: #9f9f9f;
+  text-align: center;
 }

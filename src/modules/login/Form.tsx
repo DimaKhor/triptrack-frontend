@@ -84,7 +84,7 @@ const Form = observer(() => {
                     </ul>
                 </div>
                 <div className="login__links">
-                    <a className="grey_link">
+                    <a className="grey_link" href="../registration">
                         <span>Еще нет аккаунта?</span>
                     </a>
                     <button className="main__link blue_button" onClick={ submit }>Войти</button>
