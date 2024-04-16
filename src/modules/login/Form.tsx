@@ -60,23 +60,31 @@ const Form = observer(() => {
                 </div>
             </header>
             <main className="login__main">
-                <h1 className="login__title">С возвращением в TripTrack!</h1>
+                <h1 className="title">С возвращением в TripTrack!</h1>
                 <div className="input__user-data">
-                    <ul className="login__input-list">
+                    <ul className="input-list">
                         <li>
-                            <h3 className="login__input__title">Имя пользователя</h3>
-                            <input type="text" placeholder="Имя пользователя" className="login__input"
-                                   onChange={ (event) => handleChange(event, setEmail) }
-                            />
+                            <label className="input__title" htmlFor="email">Почта
+                                <input type="text"
+                                       placeholder="example@g.nsu.ru"
+                                       className="input"
+                                       id="email"
+                                       onChange={ (event) => handleChange(event, setEmail) }
+                                />
+                            </label>
                             {emailError && (
                                 <p className="wrong_data">{ emailError }</p>
                             )}
                         </li>
                         <li>
-                            <h3 className="login__input__title">Пароль</h3>
-                            <input type="password" placeholder="Пароль" className="login__input"
-                                   onChange={ (event) => handleChange(event, setPassword)}
-                            />
+                            <label className="input__title" htmlFor="password">Пароль
+                                <input type="password"
+                                       placeholder="********"
+                                       className="input"
+                                       id="password"
+                                       onChange={ (event) => handleChange(event, setPassword)}
+                                />
+                            </label>
                             {passwordError && (
                                 <p className="wrong_data">{passwordError}</p>
                             )}

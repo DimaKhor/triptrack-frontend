@@ -60,42 +60,58 @@ const Form = observer(() => {
                     <img src={logo} alt="Логотип сайта"/>
                 </div>
             </header>
-            <main className="login__main">
-                <h1 className="login__title">Добро пожаловать в TripTrack</h1>
+            <main className="registration__main">
+                <h1 className="title">Добро пожаловать в TripTrack</h1>
                 <div className="input__user-data">
-                    <ul className="login__input-list">
+                    <ul className="input-list">
                         <li>
-                            <h3 className="login__input__title">Почта</h3>
-                            <input type="text" placeholder="Почта" className="login__input"
-                                   onChange={ (event) => handleChange(event, setEmail) }
-                            />
+                            <label className="input__title" htmlFor="email">Почта
+                                <input type="text"
+                                       placeholder="example@g.nsu.ru"
+                                       className="input"
+                                       id="email"
+                                       onChange={ (event) => handleChange(event, setEmail) }
+                                />
+                            </label>
                             {emailError && (
                                 <p className="wrong_data">{ emailError }</p>
                             )}
                         </li>
                         <li>
-                            <h3 className="login__input__title">Имя пользователя</h3>
-                            <input type="text" placeholder="Имя пользователя" className="login__input"
-                                   onChange={ (event) => handleChange(event, setLogin) }
-                            />
+                            <label className="input__title" htmlFor="name">Имя пользователя
+                                <input type="text"
+                                       placeholder="МайлиSmiley"
+                                       className="input"
+                                       id="name"
+                                       onChange={ (event) => handleChange(event, setLogin) }
+                                />
+                            </label>
                             {loginError && (
                                 <p className="wrong_data">{ loginError }</p>
                             )}
                         </li>
                         <li>
-                            <h3 className="login__input__title">Пароль</h3>
-                            <input type="password" placeholder="Пароль" className="login__input"
-                                   onChange={ (event) => handleChange(event, setPassword)}
-                            />
+                            <label className="input__title" htmlFor="password">Пароль
+                                <input type="password"
+                                       placeholder="********"
+                                       className="input"
+                                       id="password"
+                                       onChange={ (event) => handleChange(event, setPassword)}
+                                />
+                            </label>
                             {passwordError && (
                                 <p className="wrong_data">{passwordError}</p>
                             )}
                         </li>
                         <li>
-                            <h3 className="login__input__title">Повторите пароль</h3>
-                            <input type="password" placeholder="Пароль" className="login__input"
-                                   onChange={ (event) => handleChange(event, setPasswordConfirm)}
-                            />
+                            <label className="input__title" htmlFor="confirm_password">Повторите пароль
+                                <input type="password"
+                                       placeholder="********"
+                                       className="input"
+                                       id="confirm_password"
+                                       onChange={ (event) => handleChange(event, setPasswordConfirm)}
+                                />
+                            </label>
                             {password_confirmError && (
                                 <p className="wrong_data">{password_confirmError}</p>
                             )}
