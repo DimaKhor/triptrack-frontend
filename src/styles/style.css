@@ -65,6 +65,7 @@
   line-height: 150%;
   letter-spacing: 0.01em;
   text-align: center;
+  white-space: nowrap;
 }
 
 .main__cover {
@@ -151,7 +152,7 @@
 }
 
 .login__main {
-  padding: 115px 450px;
+  margin-block-start: 100px;
 }
 
 .title {
@@ -177,6 +178,7 @@
 }
 
 .input__title {
+  display: block;
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
   font-size: 20px;
@@ -186,6 +188,7 @@
 }
 
 .input {
+  display: block;
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
   font-size: 18px;
@@ -226,5 +229,5 @@
 }
 
 .registration__main {
-  padding: 50px 450px;
+  margin-block-start: 50px;
 }
