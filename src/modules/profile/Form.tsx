@@ -8,7 +8,7 @@ const Form = () => {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false); // Состояние для отображения всех элементов
     const inputRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<HTMLUListElement>(null);
     const [isListOpen, setIsListOpen] = useState(false);
@@ -26,45 +26,49 @@ const Form = () => {
         };
     }, []);
 
-    const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = event.target.value;
-        setValue(inputValue);
-        if (inputValue !== '') {
-            setLoading(true);
-            try {
-                const response = await PlaceService.GetListLocations(inputValue, 5);
-                const locations = response.data.map((item: any) => {
-                    const parts = item.display_name.split(', ');
-                    return {
-                        id: item.place_id, // Добавляем id для каждого места
-                        city: parts[0],
-                        country: parts[parts.length - 1]
-                    };
-                });
-                setItems(locations);
-                setLoading(false);
-                setIsListOpen(true); // Открыть список при вводе текста
-            } catch (error) {
-                console.error('Ошибка при получении данных:', error);
-                setLoading(false);
+    useEffect(() => {
+        async function fetchLocations() {
+            if (value !== '') {
+                setLoading(true);
+                try {
+                    const response = await PlaceService.GetListLocations(value, 5);
+                    const locations: { id: string; city: string; country: string; }[] = response.data.map((item: any) => {
+                        const parts = item.display_name.split(', ');
+                        return {
+                            id: item.place_id,
+                            city: parts[0],
+                            country: parts[parts.length - 1]
+                        };
+                    });
+                    setItems(locations.filter(item => !selectedItems.some(selectedItem => selectedItem.id === item.id)));
+                    setLoading(false);
+                } catch (error) {
+                    console.error('Ошибка при получении данных:', error);
+                    setLoading(false);
+                }
+            } else {
+                setItems([]);
             }
-        } else {
-            setItems([]);
-            setIsListOpen(false); // Закрыть список при очистке поля ввода
         }
+
+        fetchLocations();
+    }, [value, selectedItems]);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+        setIsListOpen(true);
     };
 
     const handleSelectItem = (selectedItem: any) => {
         setSelectedItems([...selectedItems, selectedItem]);
-        setIsListOpen(false); // Закрыть список
     };
 
-    const handleDeleteItem = (itemId: string) => {
-        setSelectedItems(selectedItems.filter(item => item.id !== itemId)); // Удаляем элемент по его id
+    const handleRemoveItem = (itemId: string) => {
+        setSelectedItems(selectedItems.filter(item => item.id !== itemId));
     };
 
     const handleToggleExpand = () => {
-        setIsExpanded(!isExpanded); // Изменить состояние развернутости списка
+        setIsExpanded(!isExpanded);
     };
 
     return (
@@ -88,17 +92,16 @@ const Form = () => {
                             value={value}
                             onChange={handleChange}
                             ref={inputRef}
-                            onClick={() => setIsListOpen(true)} // Открывать список при клике на инпут
+                            onClick={() => setIsListOpen(true)}
                         />
                     </label>
-                    {/* Отображение списка городов и стран */}
                     {value !== '' && !loading && isListOpen && (
                         <div>
                             <ul className="profile__search-list" ref={listRef}>
                                 {items.map((item, index) => (
                                     <li key={item.id} className="profile__search-list-item" onClick={() => handleSelectItem(item)}>
-                                        <div className="">
-                                            <h5 className="">{item.city}, {item.country}</h5>
+                                        <div>
+                                            <h5>{item.city}, {item.country}</h5>
                                         </div>
                                     </li>
                                 ))}
@@ -115,14 +118,12 @@ const Form = () => {
                     </h3>
                     <div className="profile__list-been-wrapper">
                         <ul className="profile__list-been">
-                            {/* Ограничение вывода элементов списка */}
                             {selectedItems.slice(0, isExpanded ? undefined : 10).map((selectedItem, index) => (
                                 <li key={selectedItem.id} className="profile__list-item-been">
                                     <p className="profile__city">{selectedItem.city}</p>
                                     <p className="profile__country">{selectedItem.country}</p>
-                                    {/* Крестик для удаления элемента */}
-                                    <button className="profile__delete-btn" onClick={() => handleDeleteItem(selectedItem.id)}>
-                                        &times;
+                                    <button className="profile__delete-btn" onClick={() => handleRemoveItem(selectedItem.id)}>
+                                        ✕
                                     </button>
                                 </li>
                             ))}
