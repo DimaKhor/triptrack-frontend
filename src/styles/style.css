@@ -231,3 +231,127 @@
 .registration__main {
   margin-block-start: 50px;
 }
+
+.profile__main {
+  margin-block-start: 7vb;
+  margin-inline: 15vi;
+}
+
+.profile__title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 125%;
+  letter-spacing: -0.03em;
+  color: #121417;
+  display: block;
+  padding-bottom: 16px;
+}
+
+.profile__input-been {
+  display: block;
+  margin-top: 16px;
+  border-radius: 12px;
+  padding: 12px 16px;
+  min-width: 928px;
+  height: 48px;
+  background-color: #f0f2f5;
+  border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+}
+
+.profile__input-been {
+  position: relative;
+}
+
+.profile__search-list {
+  position: absolute;
+  width: 928px; /* Установить ширину равной ширине инпута */
+  margin-top: -0.8rem; /* Регулируйте отступ вверх, чтобы список был выровнен с инпутом */
+  padding: 0;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #ccc; /* Добавьте границу, чтобы список был отчетливым */
+  border-top: none; /* Уберите верхнюю границу, чтобы он выглядел прикрепленным к инпуту */
+  border-radius: 0 0 5px 5px; /* Скругление углов, чтобы было красиво */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для эффекта всплывания */
+  height: auto; /* Устанавливаем авто-высоту, чтобы содержимое не было обрезано */
+  max-height: 200px; /* Установите максимальную высоту, чтобы список мог быть прокручиваемым */
+  overflow-y: auto; /* Добавьте вертикальную прокрутку, если содержимое не помещается */
+  transition: max-height 0.3s ease-out;
+  z-index: 2;
+}
+
+.profile__search-list-item {
+  padding: 0.5rem; /* Добавьте немного отступов для каждого элемента списка */
+}
+
+.profile__search-list-item:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+
+.profile__search-list-item:hover {
+  background-color: #f0f0f0;
+}
+
+
+.profile__title_been {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 125%;
+  letter-spacing: -0.02em;
+  margin-block-end: 20px;
+}
+
+.profile__expand-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 125%;
+  letter-spacing: -0.02em;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 10px;
+  color: #737373;
+}
+
+.profile__list-been {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 176px);
+  gap: 12.5px;
+  width: 100%;
+  list-style: none;
+}
+
+.profile__list-item-been {
+  border: 1px solid #dbe3e5;
+  border-radius: 8px;
+  padding: 16px;
+  width: 176px;
+  height: 131px;
+  position: relative;
+}
+
+.profile__delete-btn {
+  position: absolute; /* Позиционирование абсолютно */
+  top: 0; /* Расположение в верхнем краю */
+  right: 0; /* Расположение в правом краю */
+  background-color: transparent; /* Белый фон */
+  border: none;
+  color: gray; /* Серый цвет */
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+  text-align: center;
+  outline: none; /* Убираем обводку при фокусе */
+}

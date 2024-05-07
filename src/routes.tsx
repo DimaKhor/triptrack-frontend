@@ -2,6 +2,7 @@ import React, { JSX } from "react";
 import { MainPage } from "./pages/MainPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegistrationPage } from "./pages/RegistrationPage";
+import {ProfilePage} from "./pages/ProfilePage";
 
 export type RouteType = {
     component: JSX.Element
@@ -26,6 +27,12 @@ export function getRoutes(): RouteType[] {
             component: <RegistrationPage />,
             isProtected: false,
             path: '/registration'
+        },
+
+        {
+            component: <ProfilePage />,
+            isProtected: false,
+            path: '/profile'
         },
     ];
 }
