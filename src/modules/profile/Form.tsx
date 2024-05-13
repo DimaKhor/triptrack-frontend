@@ -72,7 +72,7 @@ const Form = () => {
     };
 
     return (
-        <div>
+        <div className="profile">
             <header className="main__header">
                 <div className="main__logo">
                     <img src={logo} alt="Логотип сайта"/>
@@ -116,7 +116,6 @@ const Form = () => {
                             </button>
                         )}
                     </h3>
-                    <div className="profile__list-been-wrapper">
                         <ul className="profile__list-been">
                             {selectedItems.slice(0, isExpanded ? undefined : 10).map((selectedItem, index) => (
                                 <li key={selectedItem.id} className="profile__list-item-been">
@@ -128,7 +127,6 @@ const Form = () => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
                 </section>
             </main>
         </div>

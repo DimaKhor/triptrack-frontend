@@ -5,7 +5,8 @@
 }
 
 body {
-    width: auto;
+    max-inline-size: 1440px;
+    min-inline-size: 375px;
     margin: 0 auto;
     font-family: Raleway, sans-serif;
     background-color: #fff;

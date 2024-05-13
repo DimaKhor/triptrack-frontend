@@ -39,6 +39,10 @@
   font-weight: 400;
 }
 
+.main__main {
+  margin-inline: 176px;
+}
+
 .main__header {
   display: flex;
   justify-content: space-between;
@@ -71,7 +75,7 @@
 .main__cover {
   display: flex;
   flex-direction: column;
-  margin: 36px 176px 16px;
+  margin-block: 36px 16px;
   min-height: 680px;
   background-image: url("../assets/cover.svg");
   background-size: cover;
@@ -96,7 +100,7 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   margin: 400px 56px 0;
   font-weight: 800;
-  font-size: 56px;
+  font-size: clamp(3rem, 1.7692rem + 1.9231vw, 3.5rem);
   line-height: 125%;
   letter-spacing: -0.03em;
   color: #fff;
@@ -104,7 +108,7 @@
 }
 
 .main__about {
-  margin: 40px 176px 40px;
+  margin-block: 40px;
 }
 
 .main__about__title {
@@ -120,7 +124,7 @@
 .main__about__cards {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(159px, 1fr));
   gap: 12px;
 }
 
@@ -141,6 +145,116 @@
   font-size: 14px;
   line-height: 150%;
   color: #617a8a;
+}
+
+@media (width <= 1024px) {
+  .main__header {
+    padding: 14px 50px;
+  }
+
+  .main__main {
+    margin-inline: 90px;
+  }
+
+  .main__cover {
+    min-height: 480px;
+  }
+
+  .main__cover__title {
+    margin: 250px 36px 0;
+  }
+
+  .main__about__cards {
+    grid-template-columns: repeat(auto-fit, minmax(159px, 1fr));
+  }
+}
+
+@media (width <= 768px) {
+  .main__cover {
+    min-height: 380px;
+  }
+
+  .main__cover__title {
+    margin: 150px 36px 0;
+    font-size: clamp(1.875rem, 1.0497rem + 4.0632vw, 3rem);
+  }
+
+  .main__header {
+    padding: 8px 25px;
+  }
+
+  .main__logo {
+    min-width: 100px
+  }
+
+  .blue_button {
+    padding: 9px 10px;
+  }
+
+  .grey_button {
+    padding: 9px 10px;
+  }
+
+  .main__link {
+    font-size: clamp(0.6875rem, 0.2679rem + 1.7857vw, 1.125rem);
+  }
+
+  .main__main {
+    margin-inline: 50px;
+  }
+
+  .main__about__title {
+    font-size: clamp(1.25rem, 0.7704rem + 2.0408vw, 1.75rem);;
+    margin-bottom: 15px;
+  }
+
+  .main__about__cards {
+    grid-template-columns: repeat(2, minmax(159px, 1fr));
+  }
+}
+
+@media (width <= 375px) {
+  .main__header {
+    padding: 10px 10px;
+  }
+
+  .main__logo {
+    min-width: 90px;
+  }
+
+  .blue_button {
+    padding: 9px 10px;
+  }
+
+  .grey_button {
+    padding: 9px 10px;
+  }
+
+  .main__link {
+    font-size: 11px;
+  }
+
+  .main__cover {
+    min-height: 280px;
+  }
+
+  .main__cover__title {
+    margin: 100px 36px 0;
+    font-size: clamp(1.875rem, 1.0497rem + 4.0632vw, 3rem);
+  }
+
+  .main__about__title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .main__about__cards {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .main__main {
+    margin-inline: 30px;
+  }
 }
 
 .login__header {
