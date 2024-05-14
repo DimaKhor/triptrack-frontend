@@ -133,6 +133,11 @@ const BeenSection = () => {
                     </li>
                 ))}
             </ul>
+            {selectedItems.length === 0 && (
+                <h4 className="been__title-no-places">
+                    Пока нет добавленных мест.
+                </h4>
+            )}
         </section>
     );
 };

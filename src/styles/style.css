@@ -577,6 +577,11 @@
   color: #121417;
 }
 
+.been__title-no-places {
+  padding-inline-start: 32px;
+  color: #737373;
+}
+
 @media (width <= 1024px) {
   .profile__main {
     margin-inline: 5vi;

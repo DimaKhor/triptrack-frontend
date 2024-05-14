@@ -114,6 +114,11 @@ const WillSection = () => {
             <h3 className="profile__title_been">
                 Предстоящие путешествия
             </h3>
+            {selectedItems.length === 0 && (
+                <h4 className="been__title-no-places">
+                    Пока нет предстоящих путешествий.
+                </h4>
+            )}
             <ul className="profile__list-will">
                 {selectedItems.map((selectedItem, index) => (
                     <li key={selectedItem.id} className="profile__list-item-will" data-id={selectedItem.id}>
