@@ -34,7 +34,7 @@ const Form = observer(() => {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="../register">
                                 <button className="main__link grey_button">Создать аккаунт</button>
                             </a>
                         </li>
