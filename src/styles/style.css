@@ -648,17 +648,17 @@
   position: absolute;
   top: 64px;
   right: 10px;
-  background-color: #fff; /* Цвет фона списка */
-  border: 1px solid #ccc; /* Граница списка */
-  padding: 10px; /* Внутренний отступ */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
-  z-index: 999; /* Позиция над другими элементами */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
   border-radius: 4px;
 }
 
 .settings__list li {
-  list-style: none; /* Убираем маркеры списка */
-  padding: 5px 0; /* Внутренний отступ элементов списка */
+  list-style: none;
+  padding: 5px 0;
   min-inline-size: 150px;
   text-align: center;
 }
@@ -668,10 +668,47 @@
 }
 
 .settings__list li:hover {
-  background-color: #f0f0f0; /* Изменение цвета фона при наведении */
+  background-color: #f0f0f0;
 }
 
 .settings__image {
   width: 30px;
   height: 30px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  border: none;
+  border-radius: 8px;
+}
+
+.modal-buttons button:hover {
+  background-color: #9f9f9f;
 }

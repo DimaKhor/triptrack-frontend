@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import CityImage from "../../API/CityImage";
-import PlaceService from "../../API/PlaceService";
+import CityImage from "../../services/CityImage";
+import PlaceService from "../../services/PlaceService";
 
 const WillSection = () => {
     const [value, setValue] = useState('');

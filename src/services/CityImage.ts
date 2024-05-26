@@ -1,5 +1,3 @@
-// CityImage.ts
-
 import axios from "axios";
 
 export default class CityImage {
@@ -13,13 +11,13 @@ export default class CityImage {
             });
             const photos = response.data.results;
             if (photos.length > 0) {
-                return photos[0].urls.regular; // возвращаем URL регулярного изображения первого найденного результата
+                return photos[0].urls.regular;
             } else {
                 throw new Error('Изображение не найдено');
             }
         } catch (error) {
             console.error('Ошибка при получении изображения города:', error);
-            throw error; // Возбуждаем исключение для обработки ошибки в компоненте
+            throw error;
         }
     }
 }

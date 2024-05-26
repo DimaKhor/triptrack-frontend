@@ -40,7 +40,7 @@ const Form = observer(() => {
         if (emailError === '' && loginError === '' && passwordError === '') {
             AuthService.register(login, email, password)
                 .then(response => {
-                        window.location.assign("http://localhost:8080/email-consider")
+                        window.location.assign("http://localhost:8080/profile")
 
                     }
                 )
