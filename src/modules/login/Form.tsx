@@ -39,8 +39,8 @@ const Form = observer(() => {
                 .then(response => {
 
                     authStore.login();
-                    localStorage.setItem('accessToken', response.data.accessToken);
-                    localStorage.setItem('refreshToken', response.data.refreshToken);
+                    // localStorage.setItem('accessToken', response.data.accessToken);
+                    // localStorage.setItem('refreshToken', response.data.refreshToken);
 
                     window.location.assign('http://localhost:3000/profile');
 

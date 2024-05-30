@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 // @ts-ignore
 import { observer } from "mobx-react";
 import validate from "./RegistrationFormValidationRules";
@@ -17,6 +17,13 @@ const Form = observer(() => {
     const [loginError, setLoginError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [password_confirmError, setPasswordConfirmError] = useState('');
+    const [inputErrors, setInputErrors] = useState({
+        email: '',
+        login: '',
+        password: '',
+        password_confirm: ''
+    });
+
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setStateFunction: {
         (value: React.SetStateAction<string>): void;
@@ -32,25 +39,24 @@ const Form = observer(() => {
 
     const submit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        setEmailError(validate(email, login, password, password_confirm).email);
-        setLoginError(validate(email, login, password, password_confirm).login);
-        setPasswordError(validate(email, login, password, password_confirm).password);
-        setPasswordConfirmError(validate(email, login, password, password_confirm).password_confirm);
 
-        if (emailError === '' && loginError === '' && passwordError === '') {
-            AuthService.register(login, email, password)
-                .then(response => {
-                        window.location.assign("http://localhost:8080/profile")
+        const errors = validate(email, login, password, password_confirm);
 
-                    }
-                )
-                .catch(error => {
-                    console.error('Ошибка при получении данных:', error);
-                })
+        setInputErrors(errors);
+
+        if (Object.values(errors).some(error => error !== '')) {
+            console.log('Ошибка ввода данных');
             return;
         }
-        console.log("error")
-    }
+
+        AuthService.register(email, login, password)
+            .then(response => {
+                window.location.assign("http://localhost:3000/profile");
+            })
+            .catch(error => {
+                console.error('Ошибка при получении данных:', error);
+            });
+    };
 
     return (
 
@@ -73,8 +79,8 @@ const Form = observer(() => {
                                        onChange={ (event) => handleChange(event, setEmail) }
                                 />
                             </label>
-                            {emailError && (
-                                <p className="wrong_data">{ emailError }</p>
+                            {inputErrors.email && (
+                                <p className="wrong_data">{inputErrors.email}</p>
                             )}
                         </li>
                         <li>
@@ -86,8 +92,8 @@ const Form = observer(() => {
                                        onChange={ (event) => handleChange(event, setLogin) }
                                 />
                             </label>
-                            {loginError && (
-                                <p className="wrong_data">{ loginError }</p>
+                            {inputErrors.login && (
+                                <p className="wrong_data">{inputErrors.login}</p>
                             )}
                         </li>
                         <li>
@@ -99,8 +105,8 @@ const Form = observer(() => {
                                        onChange={ (event) => handleChange(event, setPassword)}
                                 />
                             </label>
-                            {passwordError && (
-                                <p className="wrong_data">{passwordError}</p>
+                            {inputErrors.password && (
+                                <p className="wrong_data">{inputErrors.password}</p>
                             )}
                         </li>
                         <li>
@@ -112,8 +118,8 @@ const Form = observer(() => {
                                        onChange={ (event) => handleChange(event, setPasswordConfirm)}
                                 />
                             </label>
-                            {password_confirmError && (
-                                <p className="wrong_data">{password_confirmError}</p>
+                            {inputErrors.password_confirm && (
+                                <p className="wrong_data">{inputErrors.password_confirm}</p>
                             )}
                         </li>
                     </ul>
