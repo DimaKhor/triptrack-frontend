@@ -12,7 +12,7 @@ import DeleteAccount from '../../services/DeleteAccount';
 const Form: React.FC = () => {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const userId = 1; // замените на фактический ID пользователя
+    const userId = 1;
 
     const toggleSettings = () => {
         setIsSettingsOpen(!isSettingsOpen);
@@ -44,7 +44,6 @@ const Form: React.FC = () => {
                 </div>
                 <div className="settings">
                     <button className="settings__button" onClick={toggleSettings}>
-                        <img src={settings} alt="Settings" />
                     </button>
                     {isSettingsOpen && (
                         <ul className="settings__list">

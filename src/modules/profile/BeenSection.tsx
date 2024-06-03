@@ -12,6 +12,7 @@ const BeenSection = () => {
     const listRef = useRef<HTMLUListElement>(null);
     const [isListOpen, setIsListOpen] = useState(false);
     const [cityImages, setCityImages] = useState<{ [id: string]: string }>({});
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -51,7 +52,13 @@ const BeenSection = () => {
             }
         }
 
-        fetchLocations();
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            fetchLocations();
+        }, 1000);
     }, [value, selectedItems]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

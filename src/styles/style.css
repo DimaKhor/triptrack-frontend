@@ -640,6 +640,10 @@
   background-image: url("../assets/gear_grey.svg");
 }
 
+.settings__button:active {
+  background-image: url("../assets/gear_grey.svg");
+}
+
 .settings {
   position: relative;
 }

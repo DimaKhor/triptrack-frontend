@@ -10,6 +10,7 @@ const WillSection = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<HTMLUListElement>(null);
     const [isListOpen, setIsListOpen] = useState(false);
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -49,7 +50,13 @@ const WillSection = () => {
             }
         }
 
-        fetchLocations();
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            fetchLocations();
+        }, 500);
     }, [value, selectedItems]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +68,6 @@ const WillSection = () => {
         setSelectedItems([...selectedItems, selectedItem]);
         try {
             const cityImage = await CityImage.GetCityPhoto(selectedItem.city, 'p2FD5wnX2AAGzN64HFAdP7LY_I_Ped0ew0WrIicTrsQ');
-            console.log(cityImage);
             if (cityImage) {
                 const imageElement = document.createElement('img');
                 imageElement.src = cityImage;
