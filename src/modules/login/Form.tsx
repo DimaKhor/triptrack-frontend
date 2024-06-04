@@ -1,62 +1,56 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 // @ts-ignore
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 // @ts-ignore
 import logo from "../../assets/logo.svg";
 import validate from "./LoginFormValidationRules";
 import AuthService from "../../services/AuthService";
-import {authStore} from "../../store/AuthStore";
-
-
+import { authStore } from "../../store/AuthStore";
 
 const Form = observer(() => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [loginError, setLoginError] = useState('');
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setStateFunction: {
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (arg0: any): void;
-    }) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setStateFunction: (value: React.SetStateAction<string>) => void) => {
         const inputValue = event.target.value;
         setStateFunction(inputValue);
     };
 
     const submit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        setEmailError(validate(email, password).email);
-        setPasswordError(validate(email, password).password);
+        const { email: emailValidation, password: passwordValidation } = validate(email, password);
+        setEmailError(emailValidation);
+        setPasswordError(passwordValidation);
 
-        if (emailError === '' && passwordError === '') {
+        if (emailValidation === '' && passwordValidation === '') {
             AuthService.login(email, password)
                 .then(response => {
-
-                    authStore.login();
-                    // localStorage.setItem('accessToken', response.data.accessToken);
-                    // localStorage.setItem('refreshToken', response.data.refreshToken);
-
-                    window.location.assign('http://localhost:3000/profile');
-
+                    if (response && response.userKey) {
+                        authStore.login(response.userKey);
+                        authStore.setTokens(response.accessToken, response.refreshToken);
+                        window.location.assign(`http://localhost:3000/profile/${response.userKey}`);
+                    } else {
+                        console.error('Ошибка при получении данных: неверный ответ от сервера');
+                        setLoginError('Ошибка. Неверный логин или пароль.');
+                    }
                 })
                 .catch(error => {
-                    console.error('Ошибка при получении данных:', error);
-                    console.log(authStore.isAuthenticated)
-                })
+                    console.error('Ошибка при получении данных:', error.message);
+                    setLoginError('Ошибка. Неверный логин или пароль.');
+                });
         }
-    }
+    };
+
 
     return (
-        <body>
+        <div>
             <header className="login__header">
                 <div className="main__logo">
-                    <img src={logo} alt="Логотип сайта"/>
+                    <img src={logo} alt="Логотип сайта" />
                 </div>
             </header>
             <main className="login__main">
@@ -69,12 +63,9 @@ const Form = observer(() => {
                                        placeholder="example@g.nsu.ru"
                                        className="input"
                                        id="email"
-                                       onChange={ (event) => handleChange(event, setEmail) }
-                                />
+                                       onChange={(event) => handleChange(event, setEmail)} />
                             </label>
-                            {emailError && (
-                                <p className="wrong_data">{ emailError }</p>
-                            )}
+                            {emailError && <p className="wrong_data">{emailError}</p>}
                         </li>
                         <li>
                             <label className="input__title" htmlFor="password">Пароль
@@ -82,23 +73,22 @@ const Form = observer(() => {
                                        placeholder="********"
                                        className="input"
                                        id="password"
-                                       onChange={ (event) => handleChange(event, setPassword)}
-                                />
+                                       onChange={(event) => handleChange(event, setPassword)} />
                             </label>
-                            {passwordError && (
-                                <p className="wrong_data">{passwordError}</p>
-                            )}
+                            {passwordError && <p className="wrong_data">{passwordError}</p>}
                         </li>
                     </ul>
+                    {loginError && <p className="wrong_data_login">{loginError}</p>}
                 </div>
                 <div className="login__links">
                     <a className="grey_link" href="../registration">
                         <span>Еще нет аккаунта?</span>
                     </a>
-                    <button className="main__link blue_button" onClick={ submit }>Войти</button>
+                    <button className="main__link blue_button" onClick={submit}>Войти</button>
                 </div>
             </main>
-        </body>
+        </div>
     );
 });
+
 export default Form;

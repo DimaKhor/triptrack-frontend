@@ -716,3 +716,13 @@
 .modal-buttons button:hover {
   background-color: #9f9f9f;
 }
+
+.wrong_data_login {
+  color: red;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  flex-direction: column;
+}
