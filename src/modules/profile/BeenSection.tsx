@@ -13,6 +13,36 @@ const BeenSection = () => {
     const [isListOpen, setIsListOpen] = useState(false);
     const [cityImages, setCityImages] = useState<{ [id: string]: string }>({});
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+    // Загружаем данные из localStorage при первоначальной загрузке компонента
+    useEffect(() => {
+        if (!isDataLoaded) {
+            const savedItems = localStorage.getItem('selectedItems');
+            const savedImages = localStorage.getItem('cityImages');
+            if (savedItems) {
+                const parsedItems = JSON.parse(savedItems);
+                console.log("Загруженные выбранные элементы:", parsedItems);
+                setSelectedItems(parsedItems);
+            }
+            if (savedImages) {
+                const parsedImages = JSON.parse(savedImages);
+                console.log("Загруженные изображения городов:", parsedImages);
+                setCityImages(parsedImages);
+            }
+            setIsDataLoaded(true);
+        }
+    }, [isDataLoaded]);
+
+    // Сохраняем данные в localStorage при изменении selectedItems или cityImages
+    useEffect(() => {
+        if (isDataLoaded) {
+            console.log("Сохранение выбранных элементов:", selectedItems);
+            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+            console.log("Сохранение изображений городов:", cityImages);
+            localStorage.setItem('cityImages', JSON.stringify(cityImages));
+        }
+    }, [selectedItems, cityImages, isDataLoaded]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
