@@ -1,23 +1,15 @@
 import React from 'react';
-import DeleteAccount from '../../services/DeleteAccount'; // Подставьте правильный путь к файлу DeleteAccount
+import AuthService from '../../services/AuthService';
 
 interface DeleteAccountModalProps {
     isOpen: boolean;
     onClose: () => void;
     onDelete: () => void;
+    userKey: string;
 }
 
-const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose, onDelete }) => {
+const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose, onDelete, userKey }) => {
     if (!isOpen) return null;
-
-    const handleDelete = async () => {
-        try {
-            await DeleteAccount.delete(4);
-            onDelete();
-        } catch (error) {
-            console.error("Ошибка при удалении аккаунта:", error);
-        }
-    };
 
     return (
         <div className="modal-overlay">
@@ -25,7 +17,7 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose
                 <p>Вы точно хотите удалить аккаунт?</p>
                 <div className="modal-buttons">
                     <button onClick={onClose}>Нет</button>
-                    <button onClick={handleDelete}>Да</button>
+                    <button onClick={onDelete}>Да</button>
                 </div>
             </div>
         </div>
