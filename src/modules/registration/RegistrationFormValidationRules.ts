@@ -14,6 +14,8 @@ export default function validate(email: string, login: string, password: string,
     }
     if (!login) {
         errors.login = "Введите имя пользователя";
+    } else if (/\s/.test(login)) {
+        errors.login = "Имя пользователя не должно содержать пробелы";
     }
     if (!password) {
         errors.password = "Введите пароль";

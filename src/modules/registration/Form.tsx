@@ -1,22 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 // @ts-ignore
 import { observer } from "mobx-react";
 import validate from "./RegistrationFormValidationRules";
 import AuthService from "../../services/AuthService";
+import { authStore } from "../../store/AuthStore";
 // @ts-ignore
 import logo from "../../assets/logo.svg";
 
 const Form = observer(() => {
-
     const [email, setEmail] = useState('');
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [password_confirm, setPasswordConfirm] = useState('');
 
-    const [emailError, setEmailError] = useState('');
-    const [loginError, setLoginError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [password_confirmError, setPasswordConfirmError] = useState('');
     const [inputErrors, setInputErrors] = useState({
         email: '',
         login: '',
@@ -24,24 +20,17 @@ const Form = observer(() => {
         password_confirm: ''
     });
 
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setStateFunction: {
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (value: React.SetStateAction<string>): void;
-        (arg0: any): void;
-    }) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setStateFunction: React.Dispatch<React.SetStateAction<string>>) => {
         const inputValue = event.target.value;
         setStateFunction(inputValue);
     };
 
-    const submit = (e: { preventDefault: () => void; }) => {
+    const submit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         const errors = validate(email, login, password, password_confirm);
-
         setInputErrors(errors);
 
         if (Object.values(errors).some(error => error !== '')) {
@@ -49,18 +38,27 @@ const Form = observer(() => {
             return;
         }
 
-        AuthService.register(email, login, password)
-            .then(response => {
-                window.location.assign("http://localhost:3000/profile");
-            })
-            .catch(error => {
-                console.error('Ошибка при получении данных:', error);
-            });
+        try {
+            const registrationResponse = await AuthService.register(email, login, password);
+            if (registrationResponse && registrationResponse.userKey) {
+                const loginResponse = await AuthService.login(email, password);
+                if (loginResponse && loginResponse.userKey) {
+                    authStore.login(loginResponse.userKey);
+                    window.location.assign(`http://localhost:3000/profile/${loginResponse.userKey}`);
+                } else {
+                    throw new Error('Ошибка входа после регистрации');
+                }
+            } else {
+                throw new Error('Ошибка регистрации');
+            }
+        } catch (error) {
+            console.error('Ошибка при регистрации или входе:', error);
+            setErrorMessage('Ошибка при регистрации. Пожалуйста, попробуйте снова.');
+        }
     };
 
     return (
-
-        <body>
+        <div>
             <header className="login__header">
                 <div className="main__logo">
                     <img src={logo} alt="Логотип сайта"/>
@@ -76,7 +74,7 @@ const Form = observer(() => {
                                        placeholder="example@g.nsu.ru"
                                        className="input"
                                        id="email"
-                                       onChange={ (event) => handleChange(event, setEmail) }
+                                       onChange={(event) => handleChange(event, setEmail)}
                                 />
                             </label>
                             {inputErrors.email && (
@@ -89,7 +87,7 @@ const Form = observer(() => {
                                        placeholder="МайлиSmiley"
                                        className="input"
                                        id="name"
-                                       onChange={ (event) => handleChange(event, setLogin) }
+                                       onChange={(event) => handleChange(event, setLogin)}
                                 />
                             </label>
                             {inputErrors.login && (
@@ -102,7 +100,7 @@ const Form = observer(() => {
                                        placeholder="********"
                                        className="input"
                                        id="password"
-                                       onChange={ (event) => handleChange(event, setPassword)}
+                                       onChange={(event) => handleChange(event, setPassword)}
                                 />
                             </label>
                             {inputErrors.password && (
@@ -115,7 +113,7 @@ const Form = observer(() => {
                                        placeholder="********"
                                        className="input"
                                        id="confirm_password"
-                                       onChange={ (event) => handleChange(event, setPasswordConfirm)}
+                                       onChange={(event) => handleChange(event, setPasswordConfirm)}
                                 />
                             </label>
                             {inputErrors.password_confirm && (
@@ -123,16 +121,18 @@ const Form = observer(() => {
                             )}
                         </li>
                     </ul>
+                    {errorMessage && (
+                        <p className="wrong_data_login">{errorMessage}</p>
+                    )}
                 </div>
                 <div className="login__links">
                     <a className="grey_link" href="../login">
                         <span>Уже есть аккаунт?</span>
                     </a>
-                    <button className="main__link blue_button" onClick={ submit }>Зарегистрироваться</button>
+                    <button className="main__link blue_button" onClick={submit}>Зарегистрироваться</button>
                 </div>
             </main>
-        </body>
-
+        </div>
     );
 });
 export default Form;
