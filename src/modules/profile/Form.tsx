@@ -9,16 +9,24 @@ import DeleteAccountModal from "./DeleteAccountModal";
 import { authStore } from "../../store/AuthStore";
 import { useParams, useNavigate } from "react-router-dom";
 import AuthService from "../../services/AuthService";
+import UserService from "../../services/UserService";
 
 const Form: React.FC = () => {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userLogin, setUserLogin] = useState<string | null>(null);
     const { userKey } = useParams<{ userKey: string }>();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (authStore.userKey !== userKey) {
             navigate('/login');
+        } else {
+            UserService.getUserInfo(authStore.userKey).then(login => {
+                setUserLogin(login);
+            }).catch(error => {
+                console.error("Ошибка при получении информации о пользователе:", error);
+            });
         }
     }, [userKey, navigate]);
 
@@ -36,10 +44,16 @@ const Form: React.FC = () => {
 
     const handleDeleteAccount = async () => {
         try {
-            if (authStore.userKey) {
+            if (authStore.userKey && userLogin) {
                 await AuthService.deleteAccount(authStore.userKey);
+
+                localStorage.removeItem(`selectedBeenItems_${userLogin}`);
+                localStorage.removeItem(`cityBeenImages_${userLogin}`);
+                localStorage.removeItem(`selectedWillItems_${userLogin}`);
+                localStorage.removeItem(`cityWillImages_${userLogin}`);
+
                 authStore.deleteAccount();
-                navigate('/registration'); // Перенаправление на страницу регистрации после удаления аккаунта
+                navigate('../registration');
             }
         } catch (error) {
             console.error("Ошибка при удалении аккаунта:", error);
@@ -51,12 +65,16 @@ const Form: React.FC = () => {
             if (authStore.userKey) {
                 await AuthService.logout(authStore.userKey);
                 authStore.logout();
-                navigate('/login'); // Перенаправление на страницу логина после выхода из аккаунта
+                navigate('/login');
             }
         } catch (error) {
             console.error("Ошибка при выходе из аккаунта:", error);
         }
     };
+
+    if (!userKey) {
+        return null;
+    }
 
     return (
         <div className="profile">
@@ -66,11 +84,9 @@ const Form: React.FC = () => {
                 </div>
                 <div className="settings">
                     <button className="settings__button" onClick={toggleSettings}>
-                        <img src={settings} alt="Настройки" />
                     </button>
                     {isSettingsOpen && (
                         <ul className="settings__list">
-                            <li>Изменить пароль</li>
                             <li onClick={openModal}>Удалить аккаунт</li>
                             <li onClick={handleLogout}>
                                 <a href="#">Выйти</a>
@@ -80,16 +96,14 @@ const Form: React.FC = () => {
                 </div>
             </header>
             <main className="profile__main">
-                <h1>Профиль пользователя</h1>
-                <p>Ключ пользователя: {userKey}</p>
-                <BeenSection />
-                <WillSection />
+                <BeenSection userKey={userKey} />
+                <WillSection userKey={userKey} />
             </main>
             <DeleteAccountModal
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 onDelete={handleDeleteAccount}
-                userKey={userKey ?? ''}
+                userKey={userKey}
             />
         </div>
     );
