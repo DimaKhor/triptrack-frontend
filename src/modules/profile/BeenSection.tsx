@@ -1,25 +1,43 @@
 import React, { useState, useRef, useEffect } from "react";
 import CityImage from "../../services/CityImage";
 import PlaceService from "../../services/PlaceService";
+import UserService from "../../services/UserService";
 
-const BeenSection = () => {
+interface BeenSectionProps {
+    userKey: string;
+}
+
+const BeenSection: React.FC<BeenSectionProps> = ({ userKey }) => {
     const [value, setValue] = useState('');
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
-    const [isExpanded, setIsExpanded] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<HTMLUListElement>(null);
     const [isListOpen, setIsListOpen] = useState(false);
-    const [cityImages, setCityImages] = useState<{ [id: string]: string }>({});
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [cityImages, setCityImages] = useState<{ [id: string]: string }>({});
+    const [userEmail, setUserEmail] = useState<string | null>(null);
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    // Загружаем данные из localStorage при первоначальной загрузке компонента
     useEffect(() => {
-        if (!isDataLoaded) {
-            const savedItems = localStorage.getItem('selectedItems');
-            const savedImages = localStorage.getItem('cityImages');
+        const fetchUserInfo = async () => {
+            try {
+                const email = await UserService.getUserInfo(userKey);
+                setUserEmail(email);
+            } catch (error) {
+                console.error("Error fetching user info:", error);
+            }
+        };
+
+        fetchUserInfo();
+    }, [userKey]);
+
+    useEffect(() => {
+        if (userEmail && !isDataLoaded) {
+            const savedItems = localStorage.getItem(`selectedBeenItems_${userEmail}`);
+            const savedImages = localStorage.getItem(`cityBeenImages_${userEmail}`);
             if (savedItems) {
                 const parsedItems = JSON.parse(savedItems);
                 console.log("Загруженные выбранные элементы:", parsedItems);
@@ -32,17 +50,16 @@ const BeenSection = () => {
             }
             setIsDataLoaded(true);
         }
-    }, [isDataLoaded]);
+    }, [userEmail, isDataLoaded]);
 
-    // Сохраняем данные в localStorage при изменении selectedItems или cityImages
     useEffect(() => {
-        if (isDataLoaded) {
+        if (isDataLoaded && userEmail) {
             console.log("Сохранение выбранных элементов:", selectedItems);
-            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+            localStorage.setItem(`selectedBeenItems_${userEmail}`, JSON.stringify(selectedItems));
             console.log("Сохранение изображений городов:", cityImages);
-            localStorage.setItem('cityImages', JSON.stringify(cityImages));
+            localStorage.setItem(`cityBeenImages_${userEmail}`, JSON.stringify(cityImages));
         }
-    }, [selectedItems, cityImages, isDataLoaded]);
+    }, [selectedItems, cityImages, isDataLoaded, userEmail]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -88,7 +105,7 @@ const BeenSection = () => {
 
         typingTimeoutRef.current = setTimeout(() => {
             fetchLocations();
-        }, 1000);
+        }, 500);
     }, [value, selectedItems]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +129,14 @@ const BeenSection = () => {
     };
 
     const handleRemoveItem = (itemId: string) => {
-        setSelectedItems(selectedItems.filter(item => item.id !== itemId));
+        const updatedSelectedItems = selectedItems.filter(item => item.id !== itemId);
+        const { [itemId]: removedImage, ...updatedCityImages } = cityImages;
+        setSelectedItems(updatedSelectedItems);
+        setCityImages(updatedCityImages);
+        if (userEmail) {
+            localStorage.setItem(`selectedBeenItems_${userEmail}`, JSON.stringify(updatedSelectedItems));
+            localStorage.setItem(`cityBeenImages_${userEmail}`, JSON.stringify(updatedCityImages));
+        }
     };
 
     const handleToggleExpand = () => {

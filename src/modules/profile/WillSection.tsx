@@ -1,8 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import CityImage from "../../services/CityImage";
 import PlaceService from "../../services/PlaceService";
+import UserService from "../../services/UserService";
 
-const WillSection = () => {
+interface WillSectionProps {
+    userKey: string;
+}
+
+const WillSection: React.FC<WillSectionProps> = ({ userKey }) => {
     const [value, setValue] = useState('');
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -11,6 +16,49 @@ const WillSection = () => {
     const listRef = useRef<HTMLUListElement>(null);
     const [isListOpen, setIsListOpen] = useState(false);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [cityImages, setCityImages] = useState<{ [id: string]: string }>({});
+    const [userEmail, setUserEmail] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const email = await UserService.getUserInfo(userKey);
+                setUserEmail(email);
+            } catch (error) {
+                console.error("Error fetching user info:", error);
+            }
+        };
+
+        fetchUserInfo();
+    }, [userKey]);
+
+    useEffect(() => {
+        if (userEmail && !isDataLoaded) {
+            const savedItems = localStorage.getItem(`selectedWillItems_${userEmail}`);
+            const savedImages = localStorage.getItem(`cityWillImages_${userEmail}`);
+            if (savedItems) {
+                const parsedItems = JSON.parse(savedItems);
+                console.log("Загруженные выбранные элементы:", parsedItems);
+                setSelectedItems(parsedItems);
+            }
+            if (savedImages) {
+                const parsedImages = JSON.parse(savedImages);
+                console.log("Загруженные изображения городов:", parsedImages);
+                setCityImages(parsedImages);
+            }
+            setIsDataLoaded(true);
+        }
+    }, [userEmail, isDataLoaded]);
+
+    useEffect(() => {
+        if (isDataLoaded && userEmail) {
+            console.log("Сохранение выбранных элементов:", selectedItems);
+            localStorage.setItem(`selectedWillItems_${userEmail}`, JSON.stringify(selectedItems));
+            console.log("Сохранение изображений городов:", cityImages);
+            localStorage.setItem(`cityWillImages_${userEmail}`, JSON.stringify(cityImages));
+        }
+    }, [selectedItems, cityImages, isDataLoaded, userEmail]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -69,17 +117,10 @@ const WillSection = () => {
         try {
             const cityImage = await CityImage.GetCityPhoto(selectedItem.city, 'p2FD5wnX2AAGzN64HFAdP7LY_I_Ped0ew0WrIicTrsQ');
             if (cityImage) {
-                const imageElement = document.createElement('img');
-                imageElement.src = cityImage;
-                imageElement.alt = `Изображение ${selectedItem.city}`;
-                imageElement.classList.add('profile__city_picture_will');
-                const listItem = document.querySelector(`.profile__list-item-will[data-id="${selectedItem.id}"]`);
-                if (listItem) {
-                    const imageContainer = listItem.querySelector('.profile__image-container');
-                    if (imageContainer) {
-                        imageContainer.appendChild(imageElement);
-                    }
-                }
+                setCityImages(prevState => ({
+                    ...prevState,
+                    [selectedItem.id]: cityImage
+                }));
             }
         } catch (error) {
             console.error('Ошибка при получении изображения города:', error);
@@ -88,6 +129,12 @@ const WillSection = () => {
 
     const handleRemoveItem = (itemId: string) => {
         setSelectedItems(selectedItems.filter(item => item.id !== itemId));
+        const { [itemId]: removedImage, ...updatedCityImages } = cityImages;
+        setCityImages(updatedCityImages);
+        if (userEmail) {
+            localStorage.setItem(`selectedWillItems_${userEmail}`, JSON.stringify(selectedItems.filter(item => item.id !== itemId)));
+            localStorage.setItem(`cityWillImages_${userEmail}`, JSON.stringify(updatedCityImages));
+        }
     };
 
     return (
@@ -129,7 +176,11 @@ const WillSection = () => {
                 {selectedItems.map((selectedItem, index) => (
                     <li key={selectedItem.id} className="profile__list-item-will" data-id={selectedItem.id}>
                         <div className="will_info">
-                            <div className="profile__image-container"></div>
+                            <div className="profile__image-container">
+                                {cityImages[selectedItem.id] && (
+                                    <img src={cityImages[selectedItem.id]} alt={`Изображение ${selectedItem.city}`} className="profile__city_picture_will" />
+                                )}
+                            </div>
                             <p className="profile__city_will">{selectedItem.city}</p>
                         </div>
                         <button className="profile__delete-btn-will" onClick={() => handleRemoveItem(selectedItem.id)}>
