@@ -30,8 +30,8 @@ export default function validate(email: string, login: string, password: string,
     }
     if (!password_confirm) {
         errors.password_confirm = "Введите пароль еще раз";
-    } else if (password_confirm != password) {
-        errors.password_confirm = "Пароли должны совпадать"
+    } else if (password_confirm !== password) {
+        errors.password_confirm = "Пароли должны совпадать";
     }
     return errors;
 }

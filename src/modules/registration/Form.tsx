@@ -34,17 +34,19 @@ const Form = observer(() => {
         setInputErrors(errors);
 
         if (Object.values(errors).some(error => error !== '')) {
-            console.log('Ошибка ввода данных');
+            console.log('Ошибка ввода данных:', errors);
             return;
         }
 
         try {
             const registrationResponse = await AuthService.register(email, login, password);
-            if (registrationResponse && registrationResponse.userKey) {
+            console.log('Регистрация выполнена:', registrationResponse);
+
+            if (registrationResponse) {
                 const loginResponse = await AuthService.login(email, password);
                 if (loginResponse && loginResponse.userKey) {
                     authStore.login(loginResponse.userKey);
-                    window.location.assign(`http://localhost:3000/profile/${loginResponse.userKey}`);
+                    window.location.assign(`../profile/${loginResponse.userKey}`);
                 } else {
                     throw new Error('Ошибка входа после регистрации');
                 }
@@ -82,11 +84,11 @@ const Form = observer(() => {
                             )}
                         </li>
                         <li>
-                            <label className="input__title" htmlFor="name">Имя пользователя
+                            <label className="input__title" htmlFor="login">Имя пользователя
                                 <input type="text"
                                        placeholder="МайлиSmiley"
                                        className="input"
-                                       id="name"
+                                       id="login"
                                        onChange={(event) => handleChange(event, setLogin)}
                                 />
                             </label>
@@ -135,4 +137,5 @@ const Form = observer(() => {
         </div>
     );
 });
+
 export default Form;

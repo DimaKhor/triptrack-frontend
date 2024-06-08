@@ -32,7 +32,7 @@ const Form = observer(() => {
                     if (response && response.userKey) {
                         authStore.login(response.userKey);
                         authStore.setTokens(response.accessToken, response.refreshToken);
-                        window.location.assign(`http://localhost:3000/profile/${response.userKey}`);
+                        window.location.assign(`../profile/${response.userKey}`);
                     } else {
                         console.error('Ошибка при получении данных: неверный ответ от сервера');
                         setLoginError('Ошибка. Неверный логин или пароль.');
