@@ -1,7 +1,7 @@
 export default class AuthService {
     static async login(email: string, password: string) {
         try {
-            const response = await fetch('http://192.168.43.242:8080/triptrack/login', {
+            const response = await fetch(`http://192.168.43.242:8080/triptrack/login?login=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -33,8 +33,8 @@ export default class AuthService {
         try {
             const requestBody = JSON.stringify({
                 login: login,
+                travelerName: name,
                 password: password,
-                travelerName: name
             });
             console.log('Register request body:', requestBody);
 
@@ -51,13 +51,14 @@ export default class AuthService {
                 throw new Error(errorText || 'Ошибка регистрации');
             }
 
-            const data = await response.json();
+            const data = await response.text();
             return data;
         } catch (error) {
             console.error('Ошибка при выполнении запроса:', error);
             throw error;
         }
     }
+
 
 
     static async logout(userKey: string) {
